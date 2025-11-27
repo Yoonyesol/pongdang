@@ -33,7 +33,6 @@ const SettingsButton = styled.TouchableOpacity`
 `;
 
 const TotalCard = styled.View`
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   background-color: ${({ theme }) => theme.colors.primary};
   border-radius: 20px;
   padding: 32px 24px;
