@@ -7,6 +7,8 @@ import { useDiarySalaryStore } from '../../src/store/useDiarySalaryStore';
 import { useLanguageStore } from '../../src/store/useLanguageStore';
 import { useTranslation } from '../../src/translations';
 import { useShiftStore, ShiftType } from '../../src/store/useShiftStore';
+import { useSalaryStore } from '../../src/store/useSalaryStore';
+import { calculateDailySalary } from '../../src/utils/salaryCalculator';
 import { Calendar } from 'react-native-calendars';
 
 const Container = styled.ScrollView`
@@ -168,6 +170,7 @@ export default function DiaryScreen() {
   const [selectedShift, setSelectedShift] = useState<ShiftType | null>(null);
   const { diaries, setDiary } = useDiarySalaryStore();
   const { shifts, setShift, findPatternGroupForDate, updatePatternGroupDates } = useShiftStore();
+  const { settings: salarySettings } = useSalaryStore();
   const language = useLanguageStore((state) => state.language);
   const t = useTranslation(language);
 
@@ -273,6 +276,48 @@ export default function DiaryScreen() {
         onChangeText={setContent}
         placeholderTextColor="#B0B8C1"
       />
+
+      {/* 오늘의 급여 */}
+      {selectedShift && selectedShift !== 'off' && date && (
+        <Section>
+          <SectionTitle>
+            {language === 'ko' ? '오늘의 예상 급여' : "Today's Expected Salary"}
+          </SectionTitle>
+          <PatternInfoCard>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
+              <PatternInfoText>{language === 'ko' ? '기본급' : 'Base Pay'}</PatternInfoText>
+              <PatternDateText>
+                ₩ {calculateDailySalary(date, selectedShift, salarySettings).basePay.toLocaleString()}
+              </PatternDateText>
+            </View>
+            {calculateDailySalary(date, selectedShift, salarySettings).nightAllowance > 0 && (
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
+                <PatternInfoText>{language === 'ko' ? '야간수당' : 'Night Allowance'}</PatternInfoText>
+                <PatternDateText>
+                  ₩ {calculateDailySalary(date, selectedShift, salarySettings).nightAllowance.toLocaleString()}
+                </PatternDateText>
+              </View>
+            )}
+            {calculateDailySalary(date, selectedShift, salarySettings).weekendAllowance > 0 && (
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
+                <PatternInfoText>{language === 'ko' ? '주말수당' : 'Weekend Allowance'}</PatternInfoText>
+                <PatternDateText>
+                  ₩ {calculateDailySalary(date, selectedShift, salarySettings).weekendAllowance.toLocaleString()}
+                </PatternDateText>
+              </View>
+            )}
+            <View style={{ height: 1, backgroundColor: '#e0e0e0', marginVertical: 8 }} />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <PatternInfoText style={{ fontWeight: 'bold', fontSize: 16 }}>
+                {language === 'ko' ? '합계' : 'Total'}
+              </PatternInfoText>
+              <PatternDateText style={{ fontSize: 18 }}>
+                ₩ {calculateDailySalary(date, selectedShift, salarySettings).totalPay.toLocaleString()}
+              </PatternDateText>
+            </View>
+          </PatternInfoCard>
+        </Section>
+      )}
 
       <View style={{ marginTop: 20 }}>
         <TossButton title={t.diary.saveEntry} onPress={handleSave} />
