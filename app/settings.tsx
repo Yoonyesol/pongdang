@@ -42,18 +42,18 @@ const LanguageOption = styled(TouchableOpacity) <{ selected: boolean }>`
   justify-content: space-between;
   padding: 16px;
   background-color: ${({ theme, selected }) =>
-        selected ? theme.colors.primary + '20' : 'transparent'};
+    selected ? theme.colors.primary + '20' : 'transparent'};
   border-radius: 12px;
   margin-bottom: 8px;
   border: 2px solid ${({ theme, selected }) =>
-        selected ? theme.colors.primary : 'transparent'};
+    selected ? theme.colors.primary : 'transparent'};
 `;
 
 const LanguageText = styled.Text<{ selected: boolean }>`
   font-size: 16px;
   font-weight: ${({ selected }) => selected ? 'bold' : 'normal'};
   color: ${({ theme, selected }) =>
-        selected ? theme.colors.primary : theme.colors.text};
+    selected ? theme.colors.primary : theme.colors.text};
 `;
 
 const CheckMark = styled.Text`
@@ -62,43 +62,43 @@ const CheckMark = styled.Text`
 `;
 
 export default function SettingsScreen() {
-    const router = useRouter();
-    const { language, setLanguage } = useLanguageStore();
-    const t = useTranslation(language);
+  const router = useRouter();
+  const { language, setLanguage } = useLanguageStore();
+  const t = useTranslation(language);
 
-    const handleLanguageChange = (lang: Language) => {
-        setLanguage(lang);
-    };
+  const handleLanguageChange = (lang: Language) => {
+    setLanguage(lang);
+  };
 
-    return (
-        <Container>
-            <Header>
-                <Title>{t.settings.title}</Title>
-            </Header>
+  return (
+    <Container>
+      <Header>
+        <Title>{t.settings.title}</Title>
+      </Header>
 
-            <Section>
-                <SectionTitle>{t.settings.language}</SectionTitle>
+      <Section>
+        <SectionTitle>{t.settings.language}</SectionTitle>
 
-                <LanguageOption
-                    selected={language === 'en'}
-                    onPress={() => handleLanguageChange('en')}
-                >
-                    <LanguageText selected={language === 'en'}>
-                        {t.settings.english}
-                    </LanguageText>
-                    {language === 'en' && <CheckMark>✓</CheckMark>}
-                </LanguageOption>
+        <LanguageOption
+          selected={language === 'en'}
+          onPress={() => handleLanguageChange('en')}
+        >
+          <LanguageText selected={language === 'en'}>
+            {t.settings.english}
+          </LanguageText>
+          {language === 'en' && <CheckMark>✓</CheckMark>}
+        </LanguageOption>
 
-                <LanguageOption
-                    selected={language === 'ko'}
-                    onPress={() => handleLanguageChange('ko')}
-                >
-                    <LanguageText selected={language === 'ko'}>
-                        {t.settings.korean}
-                    </LanguageText>
-                    {language === 'ko' && <CheckMark>✓</CheckMark>}
-                </LanguageOption>
-            </Section>
-        </Container>
-    );
+        <LanguageOption
+          selected={language === 'ko'}
+          onPress={() => handleLanguageChange('ko')}
+        >
+          <LanguageText selected={language === 'ko'}>
+            {t.settings.korean}
+          </LanguageText>
+          {language === 'ko' && <CheckMark>✓</CheckMark>}
+        </LanguageOption>
+      </Section>
+    </Container>
+  );
 }
